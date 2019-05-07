@@ -4,6 +4,7 @@ import express from 'express'
 const uri= process.env.MONGODB_URI
 const name= process.env.MONGODB_URI.split('/')[3]
 const app = express()
+const port = process.env.PORT || 3000
 const typeDefs = gql
 `
   type Query {
@@ -28,6 +29,6 @@ mongo.connect(uri,{useNewUrlParser:true}).then
       context:{db}
     })
     server.applyMiddleware({app,path:'/'})
-    app.listen(4000, () => console.log(`Now browse to localhost:4000${server.graphqlPath}`))
+    app.listen(port, () => console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
   }
 )
