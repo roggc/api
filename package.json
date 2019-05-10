@@ -5,27 +5,30 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node out/server.bundle.js",
-    "start2": "npm run dev",
+    "start2": "node out/server.bundle.js",
+    "start": "npm run dev",
     "build": "webpack --mode production",
-    "dev": "nodemon --exec babel-node src/server.js"
+    "dev": "NODE_ENV=dev nodemon --exec \"babel-node --inspect\" src/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "apollo-server-express": "^2.4.8",
     "babel-loader": "^8.0.5",
+    "bcryptjs": "^2.4.3",
     "express": "^4.16.4",
     "graphql": "^14.2.1",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.2.3",
+    "njwt": "^1.0.0",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.2",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.4.4",
     "nodemon": "^1.19.0"
   }
 }
