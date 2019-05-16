@@ -35,7 +35,8 @@ const start=async()=>
         "Access-Control-Allow-Methods",
         "GET, POST, PATCH, DELETE, OPTIONS"
       )
-      res.setHeader('Access-Control-Expose-Headers', 'Access-Control-Allow-Origin')
+      res.setHeader('Access-Control-Expose-Headers', ['Access-Control-Allow-Origin'
+      ,'Access-Control-Allow-Headers','Access-Control-Allow-Methods'])
       next()
     }
   )
@@ -55,7 +56,8 @@ const start=async()=>
         "Access-Control-Allow-Methods",
         "GET, POST, PATCH, DELETE, OPTIONS"
       )
-      res.setHeader('Access-Control-Expose-Headers', 'Access-Control-Allow-Origin')
+      res.setHeader('Access-Control-Expose-Headers', ['Access-Control-Allow-Origin'
+      ,'Access-Control-Allow-Headers','Access-Control-Allow-Methods'])
       next()
     }
   )
