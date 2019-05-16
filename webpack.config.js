@@ -7,10 +7,10 @@ module.exports=
 {
   target: 'node',
   externals: [nodeExternals()],
-  entry:['babel-polyfill',
+  entry:
   {
-    server: './src/server.js'
-  }],
+    server: ['babel-polyfill','./src/server.js']
+  },
   output:
   {
     path: path.join(__dirname,'out'),
