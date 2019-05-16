@@ -4,6 +4,7 @@ export default gql
 `
   type Query
   {
+    test1:String
     users:UsersOut!,
     getActs(clientId:String):GetActs
   }
