@@ -33,7 +33,7 @@ const port = process.env.PORT||3000
 // )
 
 //app.use(cors())
-app.options('*', cors())
+// app.options('*', cors())
 
 const start=async()=>
 {
@@ -44,10 +44,13 @@ const start=async()=>
     resolvers,
     context:({req})=>({db,req})
   })
-
-  server.applyMiddleware({app,path:'/',cors:true})
-//   app.use(cors())
-// app.options('*', cors())
+  server.applyMiddleware({app,path:'/',cors:
+  {
+    origin:'*',
+    methods:'GET, POST, PATCH, DELETE, OPTIONS',
+    allowedHeaders:'Origin, X-Requested-With, Content-Type, Accept',
+    exposedHeaders:'Access-Control-Allow-Origin'
+  }})
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
 
