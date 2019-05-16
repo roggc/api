@@ -1,6 +1,7 @@
 import {MongoClient as mongo} from 'mongodb'
 import {ApolloServer} from 'apollo-server-express'
 import express from 'express'
+import cors from 'cors'
 import typeDefs from './typeDefs'
 import resolvers from './resolvers'
 
@@ -9,6 +10,12 @@ const name= process.env.MONGODB_URI.split('/')[3]
 
 const app = express()
 const port = process.env.PORT||3000
+
+app.use
+(
+  cors
+  ()
+)
 
 const start=async()=>
 {
@@ -19,7 +26,7 @@ const start=async()=>
     resolvers,
     context:({req})=>({db,req})
   })
-  server.applyMiddleware({app,path:'/'})
+  server.applyMiddleware({app,path:'/',cors:false})
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
 

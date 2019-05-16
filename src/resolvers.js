@@ -34,6 +34,33 @@ export default
         res
       }
       return out
+    },
+    getActs:async(obj,{clientId},{db})=>
+    {
+      const errorCol= db.collection('errors')
+      const errors=await errorCol.find().toArray()
+      let out=
+      {
+        errors
+      }
+      const acts=db.collection('acts')
+      const doc=await acts.findOne({clientId:clientId})
+      if(doc)
+      {
+        out=
+        {
+          ...out,
+          res:doc.acts
+        }
+        return out
+      }
+      const error= await errorCol.findOne({name:'noexists',category:'getActs'})
+      out=
+      {
+        ...out,
+        error
+      }
+      return out
     }
   },
   Mutation:
@@ -156,10 +183,94 @@ export default
         error
       }
       return out
+    },
+    pushAct:async(obj,{clientId,act,type},{db})=>
+    {
+      const errCol= db.collection('errors')
+      const errors=await errCol.find({category:'pushAct'}).toArray()
+      let out=
+      {
+        errors
+      }
+      const actCol=db.collection('acts')
+      let doc
+      if(doc=await actCol.findOne({clientId:clientId}))
+      {
+        let acts=doc.acts
+        let index=-1
+        acts.some
+        (
+          (act,i)=>
+          {
+            if(act.type===type)
+            {
+              act.act=act
+              index=i
+              return true
+            }
+          }
+        )
+        if(index>=0)
+        {
+          acts=acts.slice(0,index)
+          doc=await actCol.findOneAndUpdate({clientId:clientId},{$set:{acts:acts}},{returnNewDocument:true})
+        }
+        else
+        {
+          doc=await actCol.findOneAndUpdate({clientId:clientId},{$push:{acts:{act:act,type:type}}},{returnNewDocument:true})
+        }
+        out=
+        {
+          ...out,
+          res:doc._id
+        }
+        return out
+      }
+      doc=await actCol.findOneAndUpdate({clientId:clientId},{$push:{acts:{act:act,type:type}}},{upsert:true,returnNewDocument:true})
+      out=
+      {
+        ...out,
+        res:doc._id
+      }
+      return out
+      // const error=await errCol.findOne({category:'pushAct',name:'dbconnection'})
+      // out=
+      // {
+      //   ...out,
+      //   error
+      // }
+      // return out
+    },
+    clearActs:async(parent,{clientId},{db})=>
+    {
+      const errCol=db.collection('errors')
+      const errors=await errCol.find({category:'clearActs'}).toArray()
+      let out=
+      {
+        errors
+      }
+      const actCol=db.collection('acts')
+      const doc=await actCol.findOneAndUpdate({clientId:clientId},{$set:{acts:[]}})
+      if(doc)
+      {
+        out=
+        {
+          ...out,
+          res:doc._id
+        }
+        return out
+      }
+      const error= await errCol.findOne({category:'clearActs',name:'db'})
+      out=
+      {
+        ...out,
+        error
+      }
+      return out
     }
   },
   User:
   {
     id: root => root._id || root.id
-  }
+  },
 }
