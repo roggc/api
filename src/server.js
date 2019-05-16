@@ -11,6 +11,27 @@ const name= process.env.MONGODB_URI.split('/')[3]
 const app = express()
 const port = process.env.PORT||3000
 
+app.use
+(
+  (req, res, next) =>
+  {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader
+    (
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    )
+    res.setHeader
+    (
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, DELETE, OPTIONS"
+    )
+    res.setHeader('Access-Control-Expose-Headers', ['Access-Control-Allow-Origin'
+    ,'Access-Control-Allow-Headers','Access-Control-Allow-Methods'])
+    next()
+  }
+)
+
 const start=async()=>
 {
   const db=await mongo.connect(uri,{useNewUrlParser:true}).then(cli=>cli.db(name))
@@ -20,49 +41,8 @@ const start=async()=>
     resolvers,
     context:({req})=>({db,req})
   })
-  app.use
-  (
-    (req, res, next) =>
-    {
-      res.setHeader("Access-Control-Allow-Origin", "*")
-      res.setHeader
-      (
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-      )
-      res.setHeader
-      (
-        "Access-Control-Allow-Methods",
-        "GET, POST, PATCH, DELETE, OPTIONS"
-      )
-      res.setHeader('Access-Control-Expose-Headers', ['Access-Control-Allow-Origin'
-      ,'Access-Control-Allow-Headers','Access-Control-Allow-Methods'])
-      next()
-    }
-  )
-  server.applyMiddleware({app,path:'/',cors:false})
-  app.use
-  (
-    (req, res, next) =>
-    {
-      res.setHeader("Access-Control-Allow-Origin", "*")
-      res.setHeader
-      (
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-      )
-      res.setHeader
-      (
-        "Access-Control-Allow-Methods",
-        "GET, POST, PATCH, DELETE, OPTIONS"
-      )
-      res.setHeader('Access-Control-Expose-Headers', ['Access-Control-Allow-Origin'
-      ,'Access-Control-Allow-Headers','Access-Control-Allow-Methods'])
-      next()
-    }
-  )
-  // app.use(cors())
-  // app.options('*', cors())
+
+  server.applyMiddleware({app,path:'/'})
 
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
