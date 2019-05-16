@@ -12,7 +12,7 @@ const app = express()
 const port = process.env.PORT||3000
 
 app.use(cors())
-app.options('*', cors())
+// app.options('*', cors())
 
 const start=async()=>
 {
@@ -42,9 +42,9 @@ const start=async()=>
   //     res.setHeader('Access-Control-Expose-Headers', 'Access-Control-Allow-Origin')
   //     next()
   //   }
-  )
-  app.use(cors())
-  app.options('*', cors())
+  // )
+  // app.use(cors())
+  // app.options('*', cors())
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
 
