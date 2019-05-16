@@ -9,7 +9,7 @@ const uri= process.env.MONGODB_URI
 const name= process.env.MONGODB_URI.split('/')[3]
 
 const app = express()
-const port = process.env.PORT||3000
+const port = process.env.PORT||4000
 
 // app.use
 // (
@@ -51,7 +51,7 @@ const start=async()=>
       exposedHeaders:'Access-Control-Allow-Origin'
     }
   })
-  server.listen().then(({ url }) =>
+  server.listen({port:port}).then(({url}) =>
   {
     console.log(`🚀  Server ready at ${url}`)
   })
