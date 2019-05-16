@@ -20,6 +20,8 @@ const start=async()=>
     resolvers,
     context:({req})=>({db,req})
   })
+
+    app.use(cors())
   server.applyMiddleware({app,path:'/',cors:false})
   // app.use
   // (
@@ -43,7 +45,7 @@ const start=async()=>
   // app.use(cors())
   // app.options('*', cors())
 
-  // app.use(cors())
+  app.use(cors())
   // app.options('*', cors())
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
