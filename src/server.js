@@ -14,7 +14,14 @@ const name= process.env.MONGODB_URI.split('/')[3]
 const app = express()
 const port = process.env.PORT||4000
 
-app.use(cors())
+app.use(cors(
+  {
+    origin:'*',
+    methods:'GET, POST, PATCH, DELETE, OPTIONS',
+    allowedHeaders:'Origin, X-Requested-With, Content-Type, Accept',
+    exposedHeaders:'Access-Control-Allow-Origin'
+  }
+))
 //app.options('*', cors())
 // app.use
 // (
