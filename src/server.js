@@ -14,35 +14,34 @@ const name= process.env.MONGODB_URI.split('/')[3]
 const app = express()
 const port = process.env.PORT||4000
 
-app.use(cors(
-  {
-    origin:'*',
-    methods:'GET, POST, PATCH, DELETE, OPTIONS',
-    allowedHeaders:'Origin, X-Requested-With, Content-Type, Accept',
-    exposedHeaders:'Access-Control-Allow-Origin'
-  }
-))
-//app.options('*', cors())
-// app.use
-// (
-//   (req, res, next) =>
+// app.use(cors(
 //   {
-//     res.setHeader("Access-Control-Allow-Origin", "*")
-//     res.setHeader
-//     (
-//       "Access-Control-Allow-Headers",
-//       "Origin, X-Requested-With, Content-Type, Accept"
-//     )
-//     res.setHeader
-//     (
-//       "Access-Control-Allow-Methods",
-//       "GET, POST, PATCH, DELETE, OPTIONS"
-//     )
-//     res.setHeader('Access-Control-Expose-Headers',
-//     'Access-Control-Allow-Origin,Access-Control-Allow-Headers,Access-Control-Allow-Methods')
-//     next()
+//     origin:'*',
+//     methods:'GET, POST, PATCH, DELETE, OPTIONS',
+//     allowedHeaders:'Origin, X-Requested-With, Content-Type, Accept',
+//     exposedHeaders:'Access-Control-Allow-Origin'
 //   }
-// )
+// ))
+//app.options('*', cors())
+app.use
+(
+  (req, res, next) =>
+  {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader
+    (
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    )
+    res.setHeader
+    (
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, DELETE, OPTIONS"
+    )
+    res.setHeader('Access-Control-Expose-Headers','Access-Control-Allow-Origin')
+    next()
+  }
+)
 
 const start=async()=>
 {
