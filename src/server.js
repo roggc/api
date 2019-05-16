@@ -43,6 +43,7 @@ const start=async()=>
       next()
     }
   )
+  app.use(cors())
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
 
