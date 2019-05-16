@@ -1,5 +1,5 @@
 import {MongoClient as mongo} from 'mongodb'
-import {ApolloServer} from 'apollo-server-express'
+import {ApolloServer} from 'apollo-server'
 import express from 'express'
 import cors from 'cors'
 import typeDefs from './typeDefs'
@@ -42,16 +42,27 @@ const start=async()=>
   ({
     typeDefs,
     resolvers,
-    context:({req})=>({db,req})
+    context:({req})=>({db,req}),
+    cors:
+    {
+      origin:'*',
+      methods:'GET, POST, PATCH, DELETE, OPTIONS',
+      allowedHeaders:'Origin, X-Requested-With, Content-Type, Accept',
+      exposedHeaders:'Access-Control-Allow-Origin'
+    }
   })
-  server.applyMiddleware({app,path:'/',cors:
+  server.listen().then(({ url }) =>
   {
-    origin:'*',
-    methods:'GET, POST, PATCH, DELETE, OPTIONS',
-    allowedHeaders:'Origin, X-Requested-With, Content-Type, Accept',
-    exposedHeaders:'Access-Control-Allow-Origin'
-  }})
-  app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
+    console.log(`🚀  Server ready at ${url}`)
+  })
+  // server.applyMiddleware({app,path:'/',cors:
+  // {
+  //   origin:'*',
+  //   methods:'GET, POST, PATCH, DELETE, OPTIONS',
+  //   allowedHeaders:'Origin, X-Requested-With, Content-Type, Accept',
+  //   exposedHeaders:'Access-Control-Allow-Origin'
+  // }})
+  // app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
 
 start()
