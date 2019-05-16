@@ -11,9 +11,6 @@ const name= process.env.MONGODB_URI.split('/')[3]
 const app = express()
 const port = process.env.PORT||3000
 
-app.use(cors())
-app.options('*', cors())
-
 const start=async()=>
 {
   const db=await mongo.connect(uri,{useNewUrlParser:true}).then(cli=>cli.db(name))
@@ -23,7 +20,7 @@ const start=async()=>
     resolvers,
     context:({req})=>({db,req})
   })
-  server.applyMiddleware({app,path:'/'})
+  server.applyMiddleware({app,path:'/',cors:false})
   // app.use
   // (
   //   (req, res, next) =>
@@ -45,6 +42,9 @@ const start=async()=>
   // )
   // app.use(cors())
   // app.options('*', cors())
+
+  app.use(cors())
+  app.options('*', cors())
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
 
