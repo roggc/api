@@ -11,8 +11,8 @@ const name= process.env.MONGODB_URI.split('/')[3]
 const app = express()
 const port = process.env.PORT||3000
 
-app.use(cors())
-app.options('*', cors())
+// app.use(cors())
+// app.options('*', cors())
 
 app.use
 (
