@@ -11,11 +11,11 @@ const name= process.env.MONGODB_URI.split('/')[3]
 const app = express()
 const port = process.env.PORT||3000
 
-app.use
-(
-  cors
-  ()
-)
+// app.use
+// (
+//   cors
+//   ()
+// )
 
 const start=async()=>
 {
@@ -26,7 +26,7 @@ const start=async()=>
     resolvers,
     context:({req})=>({db,req})
   })
-  server.applyMiddleware({app,path:'/',cors:false})
+  server.applyMiddleware({app,path:'/'})
   app.listen(port,()=>console.log(`Now browse to localhost:${port}${server.graphqlPath}`))
 }
 
