@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start2": "node out/server.bundle.js",
-    "start": "npm run dev2",
+    "start": "node out/server.bundle.js",
+    "start2": "npm run dev2",
     "build": "webpack --mode production",
     "dev": "NODE_ENV=dev nodemon --exec \"babel-node --inspect\" src/server.js",
     "dev2": "nodemon --exec babel-node src/server.js"
