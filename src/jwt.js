@@ -12,24 +12,32 @@ export const create=(data)=>
   return jwt.compact()
 }
 
-export const authenticate=async({headers}, db)=>
+export const auth=({cookies:{token}})=>
 {
-  if(headers)
+  if(token)
   {
-    const {authorization}=headers
-    if(authorization)
-    {
-      try
-      {
-        const {body:{userId}}=njwt.verify(authorization,APP_SECRET)
-        if(userId)
-        {
-          return await db.collection('users').findOne(ObjectId(userId))
-        }
-      }
-      catch (e)
-      {
-      }
-    }
+    return {body:{userId}}=njwt.verify(token,APP_SECRET)
   }
 }
+
+// export const authenticate=async({headers}, db)=>
+// {
+//   if(headers)
+//   {
+//     const {authorization}=headers
+//     if(authorization)
+//     {
+//       try
+//       {
+//         const {body:{userId}}=njwt.verify(authorization,APP_SECRET)
+//         if(userId)
+//         {
+//           return await db.collection('users').findOne(ObjectId(userId))
+//         }
+//       }
+//       catch (e)
+//       {
+//       }
+//     }
+//   }
+// }

@@ -1,45 +1,43 @@
 process.env.NODE_ENV==='dev'&& console.log('src/root')
 
 import bcrypt from 'bcryptjs'
-import {create,authenticate} from './jwt'
+import {create,auth} from './jwt'
+import {User} from './types/User'
+import {Users} from './types/Users'
 
 export default
 {
-  test1:async(args,context)=>
+  test1:({},{res})=>res.cookie('hola','adios'),
+  users:async({},{db,req,res})=>
   {
-    console.log(context)
-    return 'sdf'
-  },
-  users:async(args,{db,req})=>
-  {
+    res.cookie('hola','byes')
     const errCol=db.collection('errors')
-    const errors=await errCol.find({category:'users'}).toArray()
+    const errors=await errCol.find({function:'users'}).toArray()
     let out=
     {
       errors
     }
-    const user=await authenticate(req,db)
-    if(!user)
+    if(!auth(req))
     {
-      const error=await errCol.findOne({category:'users',name:'auth'})
+      const error=await errCol.findOne({function:'users',name:'auth'})
       out=
       {
         ...out,
         error
       }
-      return out
+      return new Users(out)
     }
     const usersCol=db.collection('users')
-    const res=await usersCol.find().toArray()
     out=
     {
       ...out,
-      res
+      res:await usersCol.find().toArray()
     }
-    return out
+    return new Users(out)
   },
-  getActs:async({clientId},{db})=>
+  getActs:async({},{db,req})=>
   {
+    const {ip}=req
     const errorCol= db.collection('errors')
     const errors=await errorCol.find().toArray()
     let out=
@@ -47,7 +45,7 @@ export default
       errors
     }
     const acts=db.collection('acts')
-    const doc=await acts.findOne({clientId:clientId})
+    const doc=await acts.findOne({ip:ip})
     if(doc)
     {
       out=
@@ -57,7 +55,7 @@ export default
       }
       return out
     }
-    const error= await errorCol.findOne({name:'noexists',category:'getActs'})
+    const error= await errorCol.findOne({name:'noexists',function:'getActs'})
     out=
     {
       ...out,
@@ -65,25 +63,25 @@ export default
     }
     return out
   },
-  signin:async(args,{db})=>
+  signin:async({email,psswrd,name},{db})=>
   {
     const users=db.collection('users')
     const errCol=db.collection('errors')
-    const errors= await errCol.find({category:'signin'}).toArray()
+    const errors= await errCol.find({function:'signin'}).toArray()
     let out=
     {
       errors
     }
-    if(!args.email|| args.email.length===0||
-      !args.psswrd|| args.psswrd.length===0||
-      !args.name|| args.name.length===0)
+    if(!email|| email.length===0||
+      !psswrd|| psswrd.length===0||
+      !name|| name.length===0)
     {
       return out
     }
-    const user=await users.findOne({email:args.email})
+    const user=await users.findOne({email:email})
     if(user)
     {
-      const error=await errCol.findOne({name:'exists',category:'signin'})
+      const error=await errCol.findOne({name:'exists',function:'signin'})
       out=
       {
         ...out,
@@ -91,12 +89,12 @@ export default
       }
       return out
     }
-    const psswrd = await bcrypt.hash(args.psswrd, 10)
-    const resp = await users.insertOne({...args,psswrd})
+    const psswrd2 = await bcrypt.hash(psswrd, 10)
+    const resp = await users.insertOne({name,email,psswrd2})
     const newUser =
     {
-      name: args.name,
-      email: args.email,
+      name,
+      email,
       id:resp.insertedId
     }
     try
@@ -127,24 +125,25 @@ export default
       return out
     }
   },
-  login:async(args,{db})=>
+  login:async({email,psswrd},{db,res})=>
   {
+    res.cookie('hola','hello buddy')
     const users=db.collection('users')
     const errCol=db.collection('errors')
-    const errors=await errCol.find({category:'login'}).toArray()
+    const errors=await errCol.find({function:'login'}).toArray()
     let out=
     {
       errors
     }
-    if(!args.email|| args.email.length===0||
-      !args.psswrd|| args.psswrd.length===0)
+    if(!email|| email.length===0||
+      !psswrd|| psswrd.length===0)
     {
       return out
     }
-    const user=await users.findOne({email:args.email})
+    const user=await users.findOne({email})
     if(user)
     {
-      const valid = await bcrypt.compare(args.psswrd, user.psswrd)
+      const valid = await bcrypt.compare(psswrd, user.psswrd)
       if(valid)
       {
         try
@@ -152,10 +151,19 @@ export default
           const token=create({userId:user._id})
           if(token)
           {
+            res.cookie('token', token,
+            {
+              httpOnly: true,
+              maxAge: 1000 * 60 * 60 * 24 * 31,
+            })
             out=
             {
               ...out,
-              res:user
+              res:
+              {
+                ...user,
+                id:user._id
+              }
             }
             return out
           }
@@ -176,7 +184,7 @@ export default
         }
       }
     }
-    const error=await errCol.findOne({name:'wrongcredentials',category:'login'})
+    const error=await errCol.findOne({name:'wrongcredentials',function:'login'})
     out=
     {
       ...out,
@@ -184,17 +192,23 @@ export default
     }
     return out
   },
-  pushAct:async({clientId,act,type},{db})=>
+  logout:({},{res})=>
   {
+    res.clearCookie('token')
+    return true
+  },
+  pushAct:async({act,type},{db,req})=>
+  {
+    const {ip}=req
     const errCol= db.collection('errors')
-    const errors=await errCol.find({category:'pushAct'}).toArray()
+    const errors=await errCol.find({function:'pushAct'}).toArray()
     let out=
     {
       errors
     }
     const actCol=db.collection('acts')
     let doc
-    if(doc=await actCol.findOne({clientId:clientId}))
+    if(doc=await actCol.findOne({ip:ip}))
     {
       let acts=doc.acts
       let index=-1
@@ -213,11 +227,11 @@ export default
       if(index>=0)
       {
         acts=acts.slice(0,index)
-        doc=await actCol.findOneAndUpdate({clientId:clientId},{$set:{acts:acts}},{returnNewDocument:true})
+        doc=await actCol.findOneAndUpdate({ip:ip},{$set:{acts:acts}},{returnNewDocument:true})
       }
       else
       {
-        doc=await actCol.findOneAndUpdate({clientId:clientId},{$push:{acts:{act:act,type:type}}},{returnNewDocument:true})
+        doc=await actCol.findOneAndUpdate({ip:ip},{$push:{acts:{act:act,type:type}}},{returnNewDocument:true})
       }
       out=
       {
@@ -226,31 +240,25 @@ export default
       }
       return out
     }
-    doc=await actCol.findOneAndUpdate({clientId:clientId},{$push:{acts:{act:act,type:type}}},{upsert:true,returnNewDocument:true})
+    doc=await actCol.findOneAndUpdate({ip:ip},{$push:{acts:{act:act,type:type}}},{upsert:true,returnNewDocument:true})
     out=
     {
       ...out,
       res:doc._id
     }
     return out
-    // const error=await errCol.findOne({category:'pushAct',name:'dbconnection'})
-    // out=
-    // {
-    //   ...out,
-    //   error
-    // }
-    // return out
   },
-  clearActs:async({clientId},{db})=>
+  clearActs:async({},{db,req})=>
   {
+    const {ip}=req
     const errCol=db.collection('errors')
-    const errors=await errCol.find({category:'clearActs'}).toArray()
+    const errors=await errCol.find({function:'clearActs'}).toArray()
     let out=
     {
       errors
     }
     const actCol=db.collection('acts')
-    const doc=await actCol.findOneAndUpdate({clientId:clientId},{$set:{acts:[]}})
+    const doc=await actCol.findOneAndUpdate({ip:ip},{$set:{acts:[]}})
     if(doc)
     {
       out=
@@ -260,16 +268,12 @@ export default
       }
       return out
     }
-    const error= await errCol.findOne({category:'clearActs',name:'db'})
+    const error= await errCol.findOne({function:'clearActs',name:'db'})
     out=
     {
       ...out,
       error
     }
     return out
-  },
-  User:
-  {
-    id: root => root._id || root.id
   }
 }

@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node out/server.bundle.js",
-    "start2": "npm run dev2",
+    "start2": "node out/server.bundle.js",
+    "start": "npm run dev",
+    "start3": "node -r dotenv/config ./node_modules/.bin/babel-node src/server.js",
     "build": "webpack --mode production",
-    "dev": "NODE_ENV=dev nodemon --exec \"babel-node --inspect\" src/server.js",
-    "dev2": "nodemon --exec babel-node src/server.js"
+    "dev": "NODE_ENV=dev nodemon --exec \"babel-node -r node_modules/dotenv/config --inspect\" src/server.js",
+    "dev2": "nodemon --exec \"babel-node -r node_modules/dotenv/config\" src/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +22,9 @@
     "babel-loader": "^8.0.5",
     "babel-polyfill": "^6.26.0",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-graphql": "^0.8.0",
     "graphql": "^14.2.1",
