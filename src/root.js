@@ -10,7 +10,7 @@ export default
   test1:({},{res})=>res.cookie('hola','adios'),
   users:async({},{db,req,res})=>
   {
-    res.cookie('hola','byes')
+    res.cookie('hola','byes',{secure:true})
     const errCol=db.collection('errors')
     const errors=await errCol.find({function:'users'}).toArray()
     let out=
