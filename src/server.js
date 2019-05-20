@@ -17,7 +17,7 @@ app.use
   cors
   (
     {
-      origin:['http://localhost:3000','https://rr-ssr.herokuapp.com'],
+      origin:['https://rr-ssr.herokuapp.com'],
       credentials:true
     }
   )
