@@ -2,7 +2,6 @@ process.env.NODE_ENV==='dev'&& console.log('src/root')
 
 import bcrypt from 'bcryptjs'
 import {create,auth} from './jwt'
-import {User} from './types/User'
 import {Users} from './types/Users'
 
 export default
@@ -10,14 +9,15 @@ export default
   test1:({},{res})=>res.cookie('hola','adios'),
   users:async({},{db,req,res})=>
   {
-    res.cookie('hola','byes',{httpOnly:true,path:'/'})
+    res.cookie('hola','byes',{httpOnly:true})
     const errCol=db.collection('errors')
     const errors=await errCol.find({function:'users'}).toArray()
     let out=
     {
       errors
     }
-    if(!auth(req))
+    const userId=auth(req.cookies)
+    if(!userId)
     {
       const error=await errCol.findOne({function:'users',name:'auth'})
       out=

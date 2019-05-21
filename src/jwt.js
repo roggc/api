@@ -1,4 +1,4 @@
-process.env.NODE_ENV==='dev'&& console.log('src/authenticate')
+process.env.NODE_ENV==='dev'&& console.log('src/jwt')
 
 import njwt from 'njwt'
 import {ObjectID as ObjectId} from 'mongodb'
@@ -12,11 +12,12 @@ export const create=(data)=>
   return jwt.compact()
 }
 
-export const auth=({cookies:{token}})=>
+export const auth=({token})=>
 {
   if(token)
   {
-    return {body:{userId}}=njwt.verify(token,APP_SECRET)
+    const {body:{userId}}=njwt.verify(token,APP_SECRET)
+    return userId
   }
 }
 

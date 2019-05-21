@@ -1,6 +1,6 @@
 process.env.NODE_ENV==='dev'&& console.log('src/types/Users')
 
-import User from './User'
+import {User} from './User'
 
 export class Users
 {
@@ -8,7 +8,11 @@ export class Users
   {
     if(res)
     {
-      this.res=res.map(user=>new User(user))
+      this.res=res.map(user=>
+        {
+          const out=new User(user)
+          return out
+        })
     }
     this.error=error
     this.errors=errors
