@@ -16,8 +16,15 @@ export const auth=({token})=>
 {
   if(token)
   {
-    const {body:{userId}}=njwt.verify(token,APP_SECRET)
-    return userId
+    try
+    {
+      const {body:{userId}}=njwt.verify(token,APP_SECRET)
+      return userId
+    }
+    catch(e)
+    {
+      return undefined
+    }
   }
 }
 
