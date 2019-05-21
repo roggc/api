@@ -155,7 +155,8 @@ export default
             {
               httpOnly: true,
               maxAge: 1000 * 60 * 60 * 24 * 31,
-              path:"/"
+              path:"/",
+              domain:"rr-ssr.herokuapp.com"
             })
             out=
             {
