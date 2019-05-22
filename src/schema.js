@@ -65,5 +65,4 @@ const schema=
   }
 `
 
-
 export default buildSchema(schema)

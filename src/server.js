@@ -17,7 +17,7 @@ app.use
   cors
   (
     {
-      origin:['https://rr-ssr.herokuapp.com','http://localhost:3000','http://enjoy.easygoo.tk'],
+      origin:['http://localhost:3000','http://enjoy.easygoo.tk'],
       credentials:true
     }
   )
