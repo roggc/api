@@ -16,7 +16,7 @@ export const auth=({token})=>
   {
     try
     {
-      const {body:{userId}}=njwt.verify(token,APP_SECRET)
+      const {body:{userId}}=njwt.verify(token,process.env.APP_SECRET)
       return userId
     }
     catch(e)
