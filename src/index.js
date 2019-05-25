@@ -13,13 +13,13 @@ const name= process.env.MONGODB_URI.split('/')[3]
 
 const app = express()
 const port = process.env.PORT||5000
-//'http://enjoy.easygoo.tk'
+
 app.use
 (
   cors
   (
     {
-      origin:['http://localhost:3000','http://localhost:4000'],
+      origin:['http://localhost:4000','http://enjoy.easygoo.tk','http://www.royalty.ga'],
       credentials:true
     }
   )
