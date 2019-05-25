@@ -9,7 +9,7 @@
     "dev2": "nodemon --exec \"babel-node -r node_modules/dotenv/config\" src/index.js",
     "build": "webpack --mode production --config ./src/wpindex.config.js",
     "start": "npx node dist/main.js",
-    "start2": "npx node -r dotenv/config ./node_modules/.bin/babel-node src/index.js"
+    "start2": "npx node -r dotenv/config dist/main.js"
   },
   "author": "",
   "license": "ISC",
