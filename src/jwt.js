@@ -1,7 +1,6 @@
 process.env.NODE_ENV==='dev'&& console.log('src/jwt')
 
 import njwt from 'njwt'
-//import {ObjectID as ObjectId} from 'mongodb'
 
 export const create=(data)=>
 {

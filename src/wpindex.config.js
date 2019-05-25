@@ -1,21 +1,10 @@
-//webpack.config.js
-
-const path= require('path')
 const nodeExternals = require('webpack-node-externals')
 
 module.exports=
 {
   target: 'node',
   externals: [nodeExternals()],
-  entry:
-  {
-    server: ['babel-polyfill','./src/server.js']
-  },
-  output:
-  {
-    path: path.join(__dirname,'out'),
-    filename: '[name].bundle.js'
-  },
+  entry:['babel-polyfill','./src/index.js'],
   module:
   {
     rules:
@@ -29,5 +18,13 @@ module.exports=
         }
       }
     ]
+  },
+  resolve:
+  {
+    modules:
+    [
+      "node_modules"
+    ],
+    extensions: ['.js']
   }
 }

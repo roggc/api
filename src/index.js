@@ -1,3 +1,5 @@
+process.env.NODE_ENV==='dev'&& console.log('src/index')
+
 import {MongoClient as mongo} from 'mongodb'
 import graphql from 'express-graphql'
 import express from 'express'
@@ -28,6 +30,7 @@ app.use(cookieParser())
 const start=async()=>
 {
   const db=await mongo.connect(uri,{useNewUrlParser:true}).then(cli=>cli.db(name))
+                .catch(e=>console.log('Error:', e))
 
   app.use
   (

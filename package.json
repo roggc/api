@@ -1,16 +1,15 @@
 {
-  "name": "mongo-graphql",
+  "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node out/server.bundle.js",
-    "start2": "npm run dev",
-    "start3": "node -r dotenv/config ./node_modules/.bin/babel-node src/server.js",
-    "build": "webpack --mode production",
-    "dev": "NODE_ENV=dev nodemon --exec \"babel-node -r node_modules/dotenv/config --inspect\" src/server.js",
-    "dev2": "nodemon --exec \"babel-node -r node_modules/dotenv/config\" src/server.js"
+  "main": "src/index.js",
+  "scripts":
+  {
+    "dev": "NODE_ENV=dev nodemon --exec \"babel-node -r node_modules/dotenv/config --inspect\" src/index.js",
+    "dev2": "nodemon --exec \"babel-node -r node_modules/dotenv/config\" src/index.js",
+    "build": "webpack --mode production --config ./src/wpindex.config.js",
+    "start": "npx node dist/main.js",
+    "start2": "npx node -r dotenv/config ./node_modules/.bin/babel-node src/index.js"
   },
   "author": "",
   "license": "ISC",
