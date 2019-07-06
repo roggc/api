@@ -19,7 +19,13 @@ app.use
   cors
   (
     {
-      origin:['http://localhost:4000','http://enjoy.easygoo.tk','http://www.royalty.ga'],
+      origin:
+      [
+        'http://localhost:4000'
+        ,'http://enjoy.easygoo.tk'
+        ,'http://www.royalty.ga'
+        ,'http://www.incognita.ga'
+      ],
       credentials:true
     }
   )
