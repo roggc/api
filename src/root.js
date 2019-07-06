@@ -127,7 +127,6 @@ export default
   },
   login:async({email,psswrd},{db,res})=>
   {
-    res.cookie('hola','hello buddy')
     const users=db.collection('users')
     const errCol=db.collection('errors')
     const errors=await errCol.find({function:'login'}).toArray()
@@ -138,6 +137,12 @@ export default
     if(!email|| email.length===0||
       !psswrd|| psswrd.length===0)
     {
+      const error=await errCol.findOne({name:'wrongcredentials',function:'login'})
+      out=
+      {
+        ...out,
+        error
+      }
       return out
     }
     const user=await users.findOne({email})
